@@ -1,6 +1,5 @@
 #Installations required -  $pip install tweepy, 
 #Installed $ pip install yahoo-finance. However before i could do it i needed to export $ CC=gcc
-
 # Initialize tweepy and authorize
 
 import tweepy
@@ -24,7 +23,7 @@ DONTWEETS_CSV = '/Users/medapa/Dropbox/HEC/Teaching/Python Sep 2016/Data/DONTWEE
 
 def get_index(index):
 #This function searches yahoo finance and gets the index values 
-# Trump anounced his candidacy for president on June 16 2015
+#Trump anounced his candidacy for president on June 16 2015. So we start the tweet analysis fro mthe 16th. 
     start = datetime(2015,06,16)
     end = date.today()
     index_data = web.DataReader(str(index), 'yahoo', start, end)
@@ -43,15 +42,8 @@ def collect_tweets(no_tweets):
     CAC40 = get_index("^FCHI")
     EURO50 = get_index("^STOXX50E")
     MEXBOL = get_index("^MXX")   
-
-    print date.today()
-    print DOW30
-    print NASDAQ
-    print FTSE100
-    print CAC40
-    print EURO50
-    print MEXBOL
     prev_tweet_date = ''
+    tweet_count = 1
 # Get the tweets from realDonaldTrump
     for status in tweepy.Cursor(api.user_timeline, id= 'realDonaldTrump').items(no_tweets):
 #Encode to utf8
@@ -60,21 +52,13 @@ def collect_tweets(no_tweets):
         else: 
             tweet_text = status._json['text'].encode('utf8', 'replace')  
         
-        if status._json['in_reply_to_user_id'] is None:
-            reply_uid = ''                    
-        else: 
-            reply_uid = status._json['in_reply_to_user_id'].encode('utf8', 'replace') 
-
-        if status._json['in_reply_to_status_id'] is None:
-            reply_stateid = ''                    
-        else: 
-            reply_stateid = status._json['in_reply_to_status_id'].encode('utf8', 'replace') 
-
+        reply_uid = status._json['in_reply_to_user_id'] 
+        reply_stateid = status._json['in_reply_to_status_id']
 #Reformat tweet date using datetime
         date1 =  str(status._json['created_at'])        
         tweet_date = datetime.strptime(date1[:20]+date1[26:30],'%a %b %d %H:%M:%S %Y')  
         
-# Get the index data specific to the tweet date       
+# Get the stock index data specific to the tweet date       
         if (date1[:3] != 'Sun' and date1[:3] != 'Sat') and (str(tweet_date.date()) != prev_tweet_date):
             print date1[:3] 
             prev_tweet_date = str(tweet_date.date())
@@ -116,7 +100,8 @@ def collect_tweets(no_tweets):
             except:
                 print "EXCEPTION KEY ERROR AT MEXBOL_val date",str(tweet_date.date())
                 MEXBOL_val =''
-            
+            day_tweet_count = tweet_count
+            tweet_count = 1
             
         else:
             DOW30_val = ''
@@ -125,18 +110,19 @@ def collect_tweets(no_tweets):
             CAC40_val = ''
             EURO50_val= ''
             MEXBOL_val = ''
+            tweet_count = tweet_count + 1
             
 
 #Store relavent information in csv        
         with open(DONTWEETS_CSV , 'ab') as don_tweets:
             tweet_write = csv.writer(don_tweets)
-            tweet_write.writerow([status._json['created_at'],tweet_text,status._json['favorite_count'],status._json['retweet_count'],reply_uid,reply_stateid,DOW30_val,NASDAQ_val,FTSE100_val,CAC40_val,EURO50_val,MEXBOL_val ])
+            tweet_write.writerow([status._json['created_at'],tweet_text,status._json['favorite_count'],status._json['retweet_count'],reply_uid,reply_stateid,DOW30_val,NASDAQ_val,FTSE100_val,CAC40_val,EURO50_val,MEXBOL_val,tweet_count ])
                    
     return
                 
 def main():        
 # mention the number of tweets required
-    tweets = 100
+    tweets = 1000
     collect_tweets(tweets)
     
 if __name__ == '__main__':
