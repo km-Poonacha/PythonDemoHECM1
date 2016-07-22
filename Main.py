@@ -78,13 +78,36 @@ def collect_tweets(no_tweets):
         if (date1[:3] != 'Sun' and date1[:3] != 'Sat') and (str(tweet_date.date()) != prev_tweet_date)and (str(tweet_date.date()) != '2016-07-21')  :
             print date1[:3] 
             print tweet_date.date()
-            DOW30_val = (DOW30.Close[str(tweet_date.date())] - DOW30.Open[str(tweet_date.date())])/DOW30.Open[str(tweet_date.date())]
-            NASDAQ_val = (NASDAQ.Close[str(tweet_date.date())] - NASDAQ.Open[str(tweet_date.date())])/NASDAQ.Open[str(tweet_date.date())]
-#            FTSE100_val = FTSE100.ix[str(tweet_date.date())]
-            CAC40_val = (CAC40.Close[str(tweet_date.date())] - CAC40.Open[str(tweet_date.date())])/CAC40.Open[str(tweet_date.date())]
-            EURO50_val= (EURO50.Close[str(tweet_date.date())] - EURO50.Open[str(tweet_date.date())])/EURO50.Open[str(tweet_date.date())]
-#            DOWSH_val = DOWSH.ix[str(tweet_date.date())]
-            MEXBOL_val = (MEXBOL.Close[str(tweet_date.date())] -MEXBOL.Open[str(tweet_date.date())])/MEXBOL.Open[str(tweet_date.date())]
+            try:
+                DOW30_val = (DOW30.Close[str(tweet_date.date())] - DOW30.Open[str(tweet_date.date())])/DOW30.Open[str(tweet_date.date())]
+            except:
+                print "EXCEPTION KEY ERROR AT DOW30_val date",str(tweet_date.date())
+                
+            try:
+                NASDAQ_val = (NASDAQ.Close[str(tweet_date.date())] - NASDAQ.Open[str(tweet_date.date())])/NASDAQ.Open[str(tweet_date.date())]
+            except:
+                print "EXCEPTION KEY ERROR AT NASDAQ_val date",str(tweet_date.date())
+                
+            try:
+                FTSE100_val = FTSE100.ix[str(tweet_date.date())]
+            except:
+                print "EXCEPTION KEY ERROR AT FTSE100_val date",str(tweet_date.date())
+            
+            try: 
+                CAC40_val = (CAC40.Close[str(tweet_date.date())] - CAC40.Open[str(tweet_date.date())])/CAC40.Open[str(tweet_date.date())]
+            except:
+                print "EXCEPTION KEY ERROR AT CAC40_val date",str(tweet_date.date())
+            
+            try: 
+                EURO50_val= (EURO50.Close[str(tweet_date.date())] - EURO50.Open[str(tweet_date.date())])/EURO50.Open[str(tweet_date.date())]
+            except:
+                print "EXCEPTION KEY ERROR AT EURO50_val date",str(tweet_date.date())
+                EURO50_val = ''
+            
+            try:
+                MEXBOL_val = (MEXBOL.Close[str(tweet_date.date())] -MEXBOL.Open[str(tweet_date.date())])/MEXBOL.Open[str(tweet_date.date())]
+            except:
+                print "EXCEPTION KEY ERROR AT MEXBOL_val date",str(tweet_date.date())
             prev_tweet_date = str(tweet_date.date())
         else:
             DOW30_val = ''
@@ -92,7 +115,6 @@ def collect_tweets(no_tweets):
             FTSE100_val = ''
             CAC40_val = ''
             EURO50_val= ''
-#            CHINAA50_val = ''
             MEXBOL_val = ''
             
 
