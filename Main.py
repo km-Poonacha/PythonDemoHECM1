@@ -15,10 +15,10 @@ from datetime import date
 from datetime import datetime
 from datetime import time
 
-consumer_key = 'SKi8LqcB7sxQOEXfZwPzZuBWG'
-consumer_secret = 'fct2RwHn7FQNl01xh45fH9T4QxLDyve7O4WURZzf5XFxyOVcVj'
-access_token = '90844107-eW3IeYLpOY58rJkDyuVd85ZFxEHqTxljaFuPEsQnk'
-access_secret = 'gZuRhIwSio4ZcnEvPGmw9IkhofJhoLFXs8PE8UDAG97yYX'
+consumer_key = 'XXX'
+consumer_secret = 'XXX'
+access_token = 'XXX'
+access_secret = 'XXX'
 
 DONTWEETS_CSV = '/Users/medapa/Dropbox/HEC/Teaching/Python Sep 2016/Data/DONTWEETS.csv'
 
@@ -32,6 +32,7 @@ def get_index(index):
     
     
 def collect_tweets(no_tweets):
+#This function finds the donald trump tweets and stores the collected data in a CSV file
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_secret)  
     api = tweepy.API(auth)
@@ -41,7 +42,6 @@ def collect_tweets(no_tweets):
     FTSE100 = get_index("^FTSE")
     CAC40 = get_index("^FCHI")
     EURO50 = get_index("^STOXX50E")
-#    DOWSH = get_index("^DJSH")
     MEXBOL = get_index("^MXX")   
 
     print date.today()
@@ -51,7 +51,7 @@ def collect_tweets(no_tweets):
     print CAC40
     print EURO50
     print MEXBOL
-
+    prev_tweet_date = ''
 # Get the tweets from realDonaldTrump
     for status in tweepy.Cursor(api.user_timeline, id= 'realDonaldTrump').items(no_tweets):
 #Encode to utf8
@@ -73,31 +73,38 @@ def collect_tweets(no_tweets):
 #Reformat tweet date using datetime
         date1 =  str(status._json['created_at'])        
         tweet_date = datetime.strptime(date1[:20]+date1[26:30],'%a %b %d %H:%M:%S %Y')  
-        prev_tweet_date = ''
+        
 # Get the index data specific to the tweet date       
-        if (date1[:3] != 'Sun' and date1[:3] != 'Sat') and (str(tweet_date.date()) != prev_tweet_date)and (str(tweet_date.date()) != '2016-07-21')  :
+        if (date1[:3] != 'Sun' and date1[:3] != 'Sat') and (str(tweet_date.date()) != prev_tweet_date):
             print date1[:3] 
-            print tweet_date.date()
+            prev_tweet_date = str(tweet_date.date())
+            print "current tweet date", tweet_date.date()
+            print "prev tweet", prev_tweet_date
+            
             try:
                 DOW30_val = (DOW30.Close[str(tweet_date.date())] - DOW30.Open[str(tweet_date.date())])/DOW30.Open[str(tweet_date.date())]
             except:
                 print "EXCEPTION KEY ERROR AT DOW30_val date",str(tweet_date.date())
+                DOW30_val = ''
                 
             try:
                 NASDAQ_val = (NASDAQ.Close[str(tweet_date.date())] - NASDAQ.Open[str(tweet_date.date())])/NASDAQ.Open[str(tweet_date.date())]
             except:
                 print "EXCEPTION KEY ERROR AT NASDAQ_val date",str(tweet_date.date())
+                NASDAQ_val = ''
                 
             try:
                 FTSE100_val = FTSE100.ix[str(tweet_date.date())]
             except:
                 print "EXCEPTION KEY ERROR AT FTSE100_val date",str(tweet_date.date())
-            
+                FTSE100_val = '' 
+                
             try: 
                 CAC40_val = (CAC40.Close[str(tweet_date.date())] - CAC40.Open[str(tweet_date.date())])/CAC40.Open[str(tweet_date.date())]
             except:
                 print "EXCEPTION KEY ERROR AT CAC40_val date",str(tweet_date.date())
-            
+                CAC40_val = ''
+                
             try: 
                 EURO50_val= (EURO50.Close[str(tweet_date.date())] - EURO50.Open[str(tweet_date.date())])/EURO50.Open[str(tweet_date.date())]
             except:
@@ -108,7 +115,9 @@ def collect_tweets(no_tweets):
                 MEXBOL_val = (MEXBOL.Close[str(tweet_date.date())] -MEXBOL.Open[str(tweet_date.date())])/MEXBOL.Open[str(tweet_date.date())]
             except:
                 print "EXCEPTION KEY ERROR AT MEXBOL_val date",str(tweet_date.date())
-            prev_tweet_date = str(tweet_date.date())
+                MEXBOL_val =''
+            
+            
         else:
             DOW30_val = ''
             NASDAQ_val = ''
