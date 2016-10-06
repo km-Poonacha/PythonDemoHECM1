@@ -18,10 +18,10 @@ from datetime import time
 
 # The following consumer ker and secret is my twitter feeds. you need to generate your consumer key and secrets for your twitter account. This is part of the OAuth security feature thatmost APIs use. 
 # you should be able to get enough documentation online to do this 
-consumer_key = 'SKi8LqcB7sxQOEXfZwPzZuBWG'
-consumer_secret = 'fct2RwHn7FQNl01xh45fH9T4QxLDyve7O4WURZzf5XFxyOVcVj'
-access_token = '90844107-eW3IeYLpOY58rJkDyuVd85ZFxEHqTxljaFuPEsQnk'
-access_secret = 'gZuRhIwSio4ZcnEvPGmw9IkhofJhoLFXs8PE8UDAG97yY'
+consumer_key = 'XXX'
+consumer_secret = 'XXX'
+access_token = 'XXX'
+access_secret = 'XXX'
 
 DONTWEETS_CSV = '/Users/medapa/Dropbox/HEC/Teaching/Python Sep 2016/Data/DONTWEETS.csv' #<< You will need to edit this link to point it to your CSV file>>
 DONTWEETS_WORDS_CSV = '/Users/medapa/Dropbox/HEC/Teaching/Python Sep 2016/Data/DONTWEETSWRDS.csv' # This file is used to calculate the word count for all the tweets
